@@ -1,0 +1,30 @@
+# Advanced model with cross-attention
+
+# Data
+data_dir: data/processed
+
+# Model
+model: advanced
+model_params:
+  gex_dim: 50
+  tcr_dim: 768
+  hidden_dim: 256
+  n_classes: 7
+  n_heads: 4
+  dropout: 0.3
+
+# Training
+device: cuda
+batch_size: 256
+epochs: 50
+lr: 0.0001
+early_stop_patience: 10
+scheduler_patience: 5
+num_workers: 4
+
+# Multi-task
+multi_task: true
+
+# Output
+save_path: results/advanced_model.pt
+results_dir: results

@@ -1,0 +1,29 @@
+# Default configuration for training
+
+# Data
+data_dir: data/processed
+
+# Model
+model: basic  # basic, multitask, advanced
+model_params:
+  gex_dim: 50
+  tcr_dim: 768
+  hidden_dim: 256
+  n_classes: 7
+  dropout: 0.3
+
+# Training
+device: cuda
+batch_size: 256
+epochs: 50
+lr: 0.001
+early_stop_patience: 10
+scheduler_patience: 3
+num_workers: 4
+
+# Multi-task (if model: multitask)
+multi_task: false
+
+# Output
+save_path: results/best_model.pt
+results_dir: results
