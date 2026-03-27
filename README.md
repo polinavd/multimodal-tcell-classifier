@@ -3,6 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-Model-orange)](https://huggingface.co/VirialyD/tcell-classifier)
 
 A multimodal deep learning model for predicting T-cell functional states by integrating single-cell gene expression, TCR sequences, and V/J gene usage. Achieves **89.6% accuracy** (macro F1 0.88) across 7 functional states using a top-5 ensemble with cross-attention fusion.
 
@@ -74,25 +75,29 @@ Using all 3,000 HVGs instead of PCA-reduced representations provides a **+4.7%**
                     Functional State
 ```
 
-The ensemble uses **8 models** with diverse hyperparameters (hidden dims 384/512, 4/8 attention heads, dropout 0.25–0.35, varied learning rates and seeds). The **top-5 by validation F1** are averaged at inference time.
+The ensemble uses the **top-5 models** (by validation F1) with diverse hyperparameters (hidden dim 512, 4/8 attention heads, dropout 0.25–0.35, varied learning rates and seeds), averaged at inference time.
 
 ## Data
 
-Trained on **~290,000 T-cells** from 4 public scRNA-seq datasets:
+Trained on **136,667 T-cells** (after QC filtering) from 4 public scRNA-seq datasets:
 
-| Dataset | Source | Cells | Tissue |
+| Dataset | Source | Cells* | Tissue |
 |---|---|---|---|
 | GSE144469 | 10x Genomics | ~60,000 | Colitis (colon) |
 | GSE179994 | 10x Genomics | ~77,000 | PBMC (exhaustion study) |
 | GSE181061 | 10x Genomics | ~31,000 | ccRCC (tumor-infiltrating) |
 | GSE108989 | Smart-seq2 | ~12,000 | CRC (tumor + blood) |
 
+*Cell counts are pre-QC; 136,667 cells remain after quality control filtering.
+
 Preprocessing: quality control → normalization (scanpy) → 3,000 HVGs → Harmony batch correction → CDR3/V/J extraction via scirpy.
 
 ## Installation
 
 ```bash
-pip install tcell-classifier
+git clone https://github.com/polinavd/multimodal-tcell-classifier.git
+cd multimodal-tcell-classifier
+pip install -r requirements.txt
 ```
 
 PyTorch with GPU support (optional but ~10x faster):
@@ -101,29 +106,15 @@ PyTorch with GPU support (optional but ~10x faster):
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 ```
 
-Or from source:
-
-```bash
-git clone https://github.com/polinavd/multimodal-tcell-classifier.git
-cd multimodal-tcell-classifier
-pip install .
-```
-
 ## Usage
 
 ### Inference on New Data
 
 ```bash
-tcell-predict your_data.h5ad
+python predict_report.py --input your_data.h5ad --output ./results
 ```
 
-Model weights (~500 MB) download automatically on first run.
-
-```bash
-tcell-predict your_data.h5ad -o results/              # custom output dir
-tcell-predict your_data.h5ad --true-labels cell_type   # evaluate against ground truth
-tcell-predict your_data.h5ad --device cpu               # force CPU
-```
+Model weights (~300 MB) are downloaded automatically from HuggingFace on first run.
 
 The report is a self-contained interactive HTML file (FastQC-style) with:
 confidence distributions, model agreement, per-class metrics, V/J gene usage patterns, confusion matrix, and exportable predictions.
@@ -141,17 +132,11 @@ python scripts/extract_tcr_embeddings.py --data-dir data/processed
 python scripts/train_ensemble.py --data-dir data/processed --save-dir results/ensemble
 ```
 
-### Python API
+### Manual Weight Download
 
 ```python
-from src.hub import ensure_weights
-from src.inference import load_ensemble, ensemble_predict
-from src.data import InferenceDataset, prepare_inference_features
-
-model_dir = ensure_weights()  # auto-downloads if needed
-models = load_ensemble(model_dir, device)
-dataset = InferenceDataset(gex, tcr_a_emb, tcr_b_emb, vj_encoded)
-predictions, probabilities, agreement = ensemble_predict(models, dataset, device)
+from huggingface_hub import snapshot_download
+snapshot_download("VirialyD/tcell-classifier", local_dir="./weights")
 ```
 
 ## Project Structure
@@ -159,8 +144,7 @@ predictions, probabilities, agreement = ensemble_predict(models, dataset, device
 ```
 multimodal-tcell-classifier/
 ├── src/
-│   ├── cli.py                  # tcell-predict CLI entrypoint
-│   ├── hub/                    # Auto-download weights from HuggingFace Hub
+│   ├── download.py              # Auto-download weights from HuggingFace Hub
 │   ├── models/
 │   │   ├── classifier.py      # FullGenesVJClassifier (main architecture)
 │   │   └── baselines.py       # GEX-only, TCR-only ablation baselines
@@ -179,8 +163,8 @@ multimodal-tcell-classifier/
 ├── scripts/                    # Reproducibility scripts (preprocess, train)
 ├── configs/                    # Training configurations
 ├── results/figures/            # Generated figures
+├── predict_report.py            # Main inference + HTML report script
 ├── QUICKSTART.md               # 2-command usage guide
-├── setup.py                    # pip install tcell-classifier
 ├── LICENSE                     # MIT
 └── README.md
 ```
@@ -206,8 +190,8 @@ multimodal-tcell-classifier/
 ## Citation
 
 ```bibtex
-@software{levchenko2025multimodal,
-  author = {Levchenko, Polina},
+@software{shirokikh2025multimodal,
+  author = {Shirokikh, Polina},
   title = {Multimodal T-Cell Functional State Classifier},
   year = {2025},
   url = {https://github.com/polinavd/multimodal-tcell-classifier}

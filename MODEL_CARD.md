@@ -1,5 +1,5 @@
 ---
-license: gpl-3.0
+license: mit
 library_name: pytorch
 tags:
   - biology
@@ -26,6 +26,8 @@ language:
 A multimodal deep learning ensemble for predicting T-cell functional states from scRNA-seq data. Integrates gene expression (3,000 HVGs), TCR sequences (via [TCR-BERT](https://github.com/wukevin/tcr-bert)), and V/J gene usage through bidirectional cross-attention fusion.
 
 **89.6% accuracy** | **macro F1 0.88** | **7 functional states** | **top-5 ensemble**
+
+**GitHub**: [polinavd/multimodal-tcell-classifier](https://github.com/polinavd/multimodal-tcell-classifier)
 
 ## Model Description
 
@@ -71,14 +73,16 @@ Classification of T-cell functional states from paired scRNA-seq + TCR-seq data.
 
 ## Training Data
 
-~290,000 T-cells from 4 public scRNA-seq datasets:
+**136,667 T-cells** (after QC filtering) from 4 public scRNA-seq datasets:
 
-| Dataset | Platform | Cells | Tissue |
+| Dataset | Platform | Cells* | Tissue |
 |---|---|---|---|
 | GSE144469 | 10x Genomics | ~60,000 | Colitis (colon) |
 | GSE179994 | 10x Genomics | ~77,000 | PBMC (exhaustion study) |
 | GSE181061 | 10x Genomics | ~31,000 | ccRCC (tumor-infiltrating) |
 | GSE108989 | Smart-seq2 | ~12,000 | CRC (tumor + blood) |
+
+*Cell counts are pre-QC; 136,667 cells remain after quality control filtering.
 
 Preprocessing: QC → normalization (scanpy) → 3,000 HVGs → Harmony batch correction → CDR3/V/J extraction via scirpy.
 
@@ -109,37 +113,20 @@ Preprocessing: QC → normalization (scanpy) → 3,000 HVGs → Harmony batch co
 
 ## How to Use
 
-### Quick Start (CLI)
+### Quick Start
 
 ```bash
-pip install tcell-classifier
-tcell-predict your_data.h5ad
+git clone https://github.com/polinavd/multimodal-tcell-classifier.git
+cd multimodal-tcell-classifier
+pip install -r requirements.txt
+python predict_report.py --input your_data.h5ad --output ./results
 ```
 
-Model weights (~300 MB) download automatically on first run.
-
-```bash
-tcell-predict data.h5ad -o results/                # custom output dir
-tcell-predict data.h5ad --true-labels cell_type     # evaluate vs ground truth
-tcell-predict data.h5ad --device cpu                # force CPU
-```
+Model weights (~300 MB) are downloaded automatically from this HuggingFace repo on first run.
 
 Output: interactive HTML report, predictions.csv, annotated .h5ad.
 
-### Python API
-
-```python
-from src.hub import ensure_weights
-from src.inference import load_ensemble, ensemble_predict
-from src.data import InferenceDataset, prepare_inference_features
-
-model_dir = ensure_weights()  # auto-downloads from this repo
-models = load_ensemble(model_dir, device)
-dataset = InferenceDataset(gex, tcr_a_emb, tcr_b_emb, vj_encoded)
-predictions, probabilities, agreement = ensemble_predict(models, dataset, device)
-```
-
-### Manual Download
+### Manual Weight Download
 
 ```python
 from huggingface_hub import snapshot_download
@@ -178,14 +165,14 @@ snapshot_download("VirialyD/tcell-classifier", local_dir="./weights")
 ## Citation
 
 ```bibtex
-@software{levchenko2026multimodal,
+@software{shirokikh2025multimodal,
   author = {Shirokikh, Polina},
   title = {Multimodal T-Cell Functional State Classifier},
-  year = {2026},
+  year = {2025},
   url = {https://github.com/polinavd/multimodal-tcell-classifier}
 }
 ```
 
 ## License
 
-GPL-3.0
+MIT License — see [LICENSE](https://github.com/polinavd/multimodal-tcell-classifier/blob/main/LICENSE) for details.
