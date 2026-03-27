@@ -1,12 +1,10 @@
-from .multimodal import MultimodalTCellClassifier, MultiTaskTCellModel
-from .encoders import GEXEncoder, TCREncoder
-from .attention import CrossAttention, AdvancedMultimodalClassifier
+from .classifier import FullGenesVJClassifier, CrossAttentionFusion, ResidualBlock
+from .baselines import GEXOnlyClassifier, TCROnlyClassifier
 
 __all__ = [
-    'MultimodalTCellClassifier',
-    'MultiTaskTCellModel', 
-    'GEXEncoder',
-    'TCREncoder',
-    'CrossAttention',
-    'AdvancedMultimodalClassifier'
+    "FullGenesVJClassifier",
+    "CrossAttentionFusion",
+    "ResidualBlock",
+    "GEXOnlyClassifier",
+    "TCROnlyClassifier",
 ]

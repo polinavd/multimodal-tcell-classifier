@@ -1,29 +1,24 @@
-# Default configuration for training
+# Default ensemble training configuration
 
 # Data
 data_dir: data/processed
 
-# Model
-model: basic  # basic, multitask, advanced
-model_params:
-  gex_dim: 50
-  tcr_dim: 768
-  hidden_dim: 256
-  n_classes: 7
-  dropout: 0.3
+# Model (FullGenesVJClassifier)
+gex_dim: 3000
+tcr_dim: 768
+vj_dim: 161
+n_classes: 7
 
 # Training
 device: cuda
-batch_size: 256
-epochs: 50
-lr: 0.001
-early_stop_patience: 10
-scheduler_patience: 3
-num_workers: 4
+epochs: 70
+warmup_ratio: 0.05
+label_smoothing: 0.03
+early_stop_patience: 12
+weight_decay: 0.02
 
-# Multi-task (if model: multitask)
-multi_task: false
+# Ensemble members: see src/training/ensemble.py for default configurations
+# Override individual member configs via command-line or custom YAML
 
 # Output
-save_path: results/best_model.pt
-results_dir: results
+save_dir: results/ensemble

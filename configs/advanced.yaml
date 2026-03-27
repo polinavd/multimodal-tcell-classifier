@@ -1,30 +1,21 @@
-# Advanced model with cross-attention
+# Extended training configuration with longer patience
 
 # Data
 data_dir: data/processed
 
 # Model
-model: advanced
-model_params:
-  gex_dim: 50
-  tcr_dim: 768
-  hidden_dim: 256
-  n_classes: 7
-  n_heads: 4
-  dropout: 0.3
+gex_dim: 3000
+tcr_dim: 768
+vj_dim: 161
+n_classes: 7
 
-# Training
+# Training (longer, more patient)
 device: cuda
-batch_size: 256
-epochs: 50
-lr: 0.0001
-early_stop_patience: 10
-scheduler_patience: 5
-num_workers: 4
-
-# Multi-task
-multi_task: true
+epochs: 100
+warmup_ratio: 0.05
+label_smoothing: 0.03
+early_stop_patience: 20
+weight_decay: 0.02
 
 # Output
-save_path: results/advanced_model.pt
-results_dir: results
+save_dir: results/ensemble_extended

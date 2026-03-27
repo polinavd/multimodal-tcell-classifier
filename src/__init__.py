@@ -1,3 +1,3 @@
-"""Multimodal T-Cell Classifier"""
+"""Multimodal T-Cell Functional State Classifier"""
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"

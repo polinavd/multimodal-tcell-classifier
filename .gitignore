@@ -37,6 +37,9 @@ Thumbs.db
 *.log
 logs/
 
-# Results (optional - can include figures)
+# Results (keep figures, exclude weights and data)
 results/*.pt
 results/*.pkl
+results/*.npz
+results/*.json
+!results/figures/
