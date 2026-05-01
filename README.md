@@ -193,7 +193,7 @@ multimodal-tcell-classifier/
 @software{shirokikh2025multimodal,
   author = {Shirokikh, Polina},
   title = {Multimodal T-Cell Functional State Classifier},
-  year = {2025},
+  year = {2026},
   url = {https://github.com/polinavd/multimodal-tcell-classifier}
 }
 ```
