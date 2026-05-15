@@ -225,7 +225,7 @@ multimodal-tcell-classifier/
 ---
 
 ## Known Limitations
-
+Intended for research use; predictions should be interpreted together with marker expression and dataset context.
 - **Domain shift**: performance drops on tissue types not seen during training, especially for Exhausted and Th_effector classes whose transcriptomic signatures are microenvironment-dependent
 - **Flat classification**: the 7-class scheme mixes lineage (Treg, Th_effector), functional state (Naive→Effector→Exhausted), and cell cycle (Proliferating) — a multi-axis formulation would improve transferability
 - **Exhausted heterogeneity**: public annotations for "Exhausted" vary across datasets (checkpoint-like CD8, cytotoxic exhausted, CD4/Tfh-like, cycling exhausted), limiting what any model can learn from this label
