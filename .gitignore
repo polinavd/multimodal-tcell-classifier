@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # Data files (too large for git)
-data/
+/data/
 *.h5ad
 *.npz
 *.pkl

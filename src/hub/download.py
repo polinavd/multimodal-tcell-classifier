@@ -35,6 +35,10 @@ REQUIRED_FILES = {
         "label_encoder.pkl",
         "vj_encoder.pkl",
     ],
+    "preprocessing": [
+        "gene_list_3000.txt",
+        "gene_scaling.npz",
+    ],
 }
 
 CACHE_DIR_ENV = "TCELL_CACHE_DIR"
