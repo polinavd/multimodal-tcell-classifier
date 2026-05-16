@@ -210,10 +210,21 @@ def generate_report(
         macro_f1 = f1_score(true_labels, predictions, average="macro")
         weighted_f1 = f1_score(true_labels, predictions, average="weighted")
         report_dict = classification_report(
-            true_labels, predictions, target_names=class_names, output_dict=True
+            true_labels,
+            predictions,
+            labels=list(range(len(class_names))),
+            target_names=class_names,
+            output_dict=True,
+            zero_division=0,
         )
-        cm = confusion_matrix(true_labels, predictions)
-        cm_normalized = cm.astype(float) / cm.sum(axis=1, keepdims=True)
+        cm = confusion_matrix(true_labels, predictions, labels=list(range(len(class_names))))
+        row_sums = cm.sum(axis=1, keepdims=True)
+        cm_normalized = np.divide(
+            cm.astype(float),
+            row_sums,
+            out=np.zeros_like(cm, dtype=float),
+            where=row_sums > 0,
+        )
 
     # Color map
     color_map = {n: CLASS_COLORS[i % len(CLASS_COLORS)] for i, n in enumerate(class_names)}

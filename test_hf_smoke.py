@@ -22,6 +22,7 @@ def test_hf_download():
         "m1_h512.pt", "m2_h512_s2.pt", "m4_8heads.pt",
         "m6_highdrop.pt", "m7_lr3e4.pt",
         "results.json", "label_encoder.pkl", "vj_encoder.pkl",
+        "gene_list_3000.txt", "gene_scaling.npz",
     ]
 
     with tempfile.TemporaryDirectory() as tmpdir:

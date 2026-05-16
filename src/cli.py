@@ -74,7 +74,12 @@ def main():
     # Features
     print("\n[4/5] Computing features (TCR-BERT embeddings + V/J encoding)...")
     gex, tcr_a, tcr_b, vj_encoded, vj_raw = prepare_inference_features(
-        adata, "wukevin/tcr-bert", vj_encoder, device
+        adata,
+        "wukevin/tcr-bert",
+        vj_encoder,
+        device,
+        gene_list_path=model_dir / "gene_list_3000.txt",
+        gene_scaling_path=model_dir / "gene_scaling.npz",
     )
     dataset = InferenceDataset(gex, tcr_a, tcr_b, vj_encoded)
 
